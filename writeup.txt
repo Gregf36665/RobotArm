@@ -1,5 +1,6 @@
-﻿Introduction
-purpose of lab: program robot arm to stack blocks
+Introduction
+Purpose of lab: The purpose of this lab was to control 5 servos to work together in order to navigate around and move blocks. The goal of this lab was to pick up 4 blocks from pre-specified positions and to stack them all at a single location.
+
 Intended audience: other students at our level who intend on implementing our design
 Why are microcontrollers and robots important? 
 What to expect in remainder of document
