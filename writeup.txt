@@ -1,0 +1,23 @@
+﻿Introduction
+purpose of lab: program robot arm to stack blocks
+Intended audience: other students at our level who intend on implementing our design
+Why are microcontrollers and robots important? 
+What to expect in remainder of document
+
+High-level Design
+
+
+Detailed Design
+
+
+Software Design
+
+
+System Testing
+
+
+Conclusion
+
+
+Appendix
+
