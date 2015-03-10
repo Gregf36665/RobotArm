@@ -21,3 +21,14 @@ Conclusion
 
 Appendix
 
+
+
+
+Introduction: A paragraph or two that explains the purpose of the project, which was to programming a robot arm to stack blocks. State your intended audience for the document, which for this lab would be another student at your level who needs to implement the system. Feel free to explain why microcontrollers and robots are important and get the reader interested. Also, briefly explain what to expect in the remainder of the document. 
+1. High-Level Design: Describe your design from a high level. Draw a simplified block diagram of the system and explain what you are trying to accomplish. State any requirements or assumptions you had for your design. If there were multiple ways to do the design, explain why you chose your particular approach. 
+2. Detailed Design: Include one or more sections that describe the internal details of the blocks in the high-level design. For example, if you used trigonometry to position the arm, you could have a section called "Algorithms." Another section could be labeled "Servo Control," etc. The description given in these sections should be sufficiently detailed that someone could understand what you did and implement it themselves. 
+3. Software Design: Explain how your code works. For example, you could show the basic series of operations with a flow chart. You can also refer to different functions in your code, but I recommend you do not bore the reader with your full code, but rather put it in an appendix. 
+4. System Testing: Describe the test cases you used, which should be sufficient to convince your reader that the system is working. 
+5. Conclusion: Give some parting words to reader summarizing what was done in the project and whether it was successful or not. Briefly explain outstanding things that would have to be looked at in the future if you were not completely successful or discovered unexpected things. 
+6. Appendix: Here you could put a listing of your code or any information you feel is too detailed (or boring) for the main project description. 
+
