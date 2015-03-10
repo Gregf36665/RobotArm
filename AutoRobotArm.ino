@@ -1,6 +1,9 @@
 #include <Servo.h> 
 #include <Math.h>
- 
+/*
+* The value D and H are the absolute length
+* d and h are the position of the wrist before the final movement
+*/
 Servo myservo[5];
 
 int pin[] = {3,5,6,9,10};
@@ -8,8 +11,7 @@ String names[] = {"Base", "Shoulder","Elbow","Wrist","Hand"};
 int minimum[] = {36,65,54,18,89};
 int maximum[] = {153,108,174,94,100};
 int angle[] = {95,90,90,45,90};
-int fixedAngle = 90; // this is the angle of the wrist to have unique solutions 
-const int wristLevel = 70;
+const int wristLevel = 70; // this is the angle between the wrist and the horizon
 
 
 void setup(){
@@ -86,16 +88,22 @@ int getWristAngle(){
 
 /**
 * This method will move the wrist orgin to d and h
+* It uses the cosine rule on the hypotonouse between
+* d and h
 */
 int getElbowAngle(int d, int h){
   int cosValue = ((A*A+B*B-(d*d+h*h))/(2*A*B));
   return radToDeg(acos(cosValue));
 }
 
+/* there are 2 angles we need to find to get
+* the shoulder angle
+*/
 int getShoulderAngle(int d, int h){
-  int cosValue = ((A*A+B*B-sqrt(d*d+h*h))/(2*A*B));
-  int angle = B*radToDeg(acos(cosValue))/(sqrt(d*d+h*h))-radToDeg(atan2(h,d));
-  return angle;
+  int theta_1 = atan2(d,h);
+  int F = sqrt(d*d+h*h); // the hypotenouse base to wrist orgin
+  int theta_2 = radToDeg(acos((A*A+F*F-B*B)/2*A*F));
+  return theta_1+theta_2;
 }
 
 
