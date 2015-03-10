@@ -9,7 +9,8 @@ High-level Design
 
 Detailed Design
 
-
+Auto level function
+To provide one unique solution we had to fix an angle on the robot arm.  The most logical angle to fix was the robot wrist angle.  Instead of keeping the angle fixed relitive to the previous arm section we kept it flat to the horizon.
 Software Design
 
 
