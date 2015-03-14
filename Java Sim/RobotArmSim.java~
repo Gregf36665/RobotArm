@@ -2,23 +2,26 @@ import acm.graphics.*;
 import acm.program.*;
 import java.awt.event.*;
 
+/**
+ * This program will help to test the robot arm without actually having one on hand
+ */
 public class RobotArmSim extends GraphicsProgram{
   
-  public static final int BASESIZE=100;
-  public static final int SHOULDERSIZE=250;
-  public static final int ARMSIZE=175;
-  public static final double ANGLECHANGE=0.1;
+  private static final int BASESIZE=100;
+  private static final int SHOULDERSIZE=250;
+  private static final int ARMSIZE=175;
+  private static final double ANGLECHANGE=0.1;
   
-  public double shoulderX,shoulderY;
-  public double armX, armY;
+  private double shoulderX,shoulderY;
+  private double armX, armY;
   
-  public double shoulderAngle=135.0, armAngle = 45.0;
+  private double shoulderAngle=135.0, armAngle = 45.0;
   
-  public boolean shoulderRRotate = false, shoulderLRotate = false;
-  public boolean armRRotate = false, armLRotate = false;
+  private boolean shoulderRRotate = false, shoulderLRotate = false;
+  private boolean armRRotate = false, armLRotate = false;
   
-  public GPolygon shoulder,arm;
-  public GRect box;
+  private GPolygon shoulder,arm;
+  private GRect box;
   
   public void init(){
     
@@ -45,15 +48,15 @@ public class RobotArmSim extends GraphicsProgram{
     addKeyListeners();
   }
   
-  public double getXDist(){
+  private double getXDist(){
     return (SHOULDERSIZE*Math.cos((180-shoulderAngle)*(Math.PI/180)));
   }
   
-  public double getYDist(){
+  private double getYDist(){
     return (SHOULDERSIZE*Math.sin((180-shoulderAngle)*(Math.PI/180)));
   }
   
-  public void oneTimeStep(){
+  private void oneTimeStep(){
     if(shoulderRRotate &&shoulderAngle < 170){
       shoulder.rotate(-ANGLECHANGE);
       arm.rotate(-ANGLECHANGE);
@@ -111,7 +114,7 @@ public class RobotArmSim extends GraphicsProgram{
     }
   }
   
-    public void run(){
+  public void run(){
     while(true){
       oneTimeStep();
       pause(5);

@@ -12,6 +12,8 @@ public class RobotArmSim extends GraphicsProgram{
   private static final int ARMSIZE=175;
   private static final double ANGLECHANGE=0.1;
   
+  private GLabel distance,height, shoulderLabel, armLabel;
+  
   private double shoulderX,shoulderY;
   private double armX, armY;
   
@@ -39,11 +41,20 @@ public class RobotArmSim extends GraphicsProgram{
     
     box = new GRect(0,getHeight()-BASESIZE,BASESIZE,getHeight());
     
+    shoulderLabel = new GLabel("Shoulder Angle: ",50,10); 
+    armLabel = new GLabel("Arm angle: ",50,30);
+    
+    distance = new GLabel("Distance: ",50,50);
+    height = new GLabel("Height: ",50,70);
+    
     add(shoulder);
-    
     add(arm);
-    
     add(box);
+    
+    add(distance);
+    add(height);
+    add(shoulderLabel);
+    add(armLabel);
     
     addKeyListeners();
   }
@@ -56,14 +67,20 @@ public class RobotArmSim extends GraphicsProgram{
     return (SHOULDERSIZE*Math.sin((180-shoulderAngle)*(Math.PI/180)));
   }
   
+  
+  
   private void oneTimeStep(){
-    if(shoulderRRotate &&shoulderAngle < 170){
+    distance.setLabel("Distance: " + (BASESIZE/2+SHOULDERSIZE*Math.cos((180-shoulderAngle)*(Math.PI/180))-ARMSIZE*Math.cos((shoulderAngle+armAngle)*(Math.PI/180))));
+    height.setLabel("Height: " + (SHOULDERSIZE*Math.sin((180-shoulderAngle)*(Math.PI/180))+ARMSIZE*Math.sin((shoulderAngle+armAngle)*(Math.PI/180))));
+    shoulderLabel.setLabel("Shoulder Angle: " + shoulderAngle);
+    armLabel.setLabel("Arm Angle: " + armAngle);
+    if(shoulderRRotate &&shoulderAngle < 180){
       shoulder.rotate(-ANGLECHANGE);
       arm.rotate(-ANGLECHANGE);
       arm.setLocation(shoulder.getX()+getXDist(),shoulder.getY()-getYDist());
       shoulderAngle+=ANGLECHANGE;
     }
-    if(shoulderLRotate && shoulderAngle > 100){
+    if(shoulderLRotate && shoulderAngle > 90){
       shoulder.rotate(ANGLECHANGE);
       arm.rotate(ANGLECHANGE);
       arm.setLocation(shoulder.getX()+getXDist(),shoulder.getY()-getYDist());
@@ -114,7 +131,7 @@ public class RobotArmSim extends GraphicsProgram{
     }
   }
   
-    public void run(){
+  public void run(){
     while(true){
       oneTimeStep();
       pause(5);
