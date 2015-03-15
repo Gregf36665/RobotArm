@@ -7,20 +7,23 @@ import java.awt.event.*;
  */
 public class RobotArmSim extends GraphicsProgram{
   
-  private static final int BASESIZE=100;
+  private static final int BASESIZE=60;
   private static final int SHOULDERSIZE=250;
   private static final int ARMSIZE=175;
-  private static final double ANGLECHANGE=0.1;
+  private static final double ANGLECHANGE=0.01;
   
   private GLabel distance,height, shoulderLabel, armLabel;
   
   private double shoulderX,shoulderY;
   private double armX, armY;
   
+  private double autoDist = 0, autoHeight = 0;
+  
   private double shoulderAngle=135.0, armAngle = 45.0;
   
-  private boolean shoulderRRotate = false, shoulderLRotate = false;
-  private boolean armRRotate = false, armLRotate = false;
+  private boolean sRR = false, sRL = false;
+  private boolean aRR = false, aRL = false;
+  private boolean auto;
   
   private GPolygon shoulder,arm;
   private GRect box;
@@ -56,6 +59,8 @@ public class RobotArmSim extends GraphicsProgram{
     add(shoulderLabel);
     add(armLabel);
     
+    updateLabels();
+    
     addKeyListeners();
   }
   
@@ -67,33 +72,124 @@ public class RobotArmSim extends GraphicsProgram{
     return (SHOULDERSIZE*Math.sin((180-shoulderAngle)*(Math.PI/180)));
   }
   
-  
-  
-  private void oneTimeStep(){
-    distance.setLabel("Distance: " + (BASESIZE/2+SHOULDERSIZE*Math.cos((180-shoulderAngle)*(Math.PI/180))-ARMSIZE*Math.cos((shoulderAngle+armAngle)*(Math.PI/180))));
-    height.setLabel("Height: " + (SHOULDERSIZE*Math.sin((180-shoulderAngle)*(Math.PI/180))+ARMSIZE*Math.sin((shoulderAngle+armAngle)*(Math.PI/180))));
-    shoulderLabel.setLabel("Shoulder Angle: " + shoulderAngle);
-    armLabel.setLabel("Arm Angle: " + armAngle);
-    if(shoulderRRotate &&shoulderAngle < 180){
+  public void shoulderRotateR(double angle){
+    if(shoulderAngle < angle){
       shoulder.rotate(-ANGLECHANGE);
       arm.rotate(-ANGLECHANGE);
       arm.setLocation(shoulder.getX()+getXDist(),shoulder.getY()-getYDist());
       shoulderAngle+=ANGLECHANGE;
     }
-    if(shoulderLRotate && shoulderAngle > 90){
+    else sRR = false;
+  }
+  
+  public void shoulderRotateL(double angle){
+    if(shoulderAngle > angle){
       shoulder.rotate(ANGLECHANGE);
       arm.rotate(ANGLECHANGE);
       arm.setLocation(shoulder.getX()+getXDist(),shoulder.getY()-getYDist());
       shoulderAngle-=ANGLECHANGE;
     }
-    if(armRRotate && armAngle < 90){
+    else sRL = false;
+  }
+  
+  public void armRotateR(double angle){
+    if(armAngle < angle){
       arm.rotate(-ANGLECHANGE);
       armAngle+=ANGLECHANGE;
     }
-    if(armLRotate && armAngle > 0){
+    else aRR = false;
+  }
+  
+  public void armRotateL(double angle){
+    if(armAngle > angle){
       arm.rotate(ANGLECHANGE);
       armAngle-=ANGLECHANGE;
     }
+    else aRL = false;
+  }
+  
+  private void oneTimeStep(){
+    if(sRR){
+      shoulderRotateR(180);
+      updateLabels();
+    }
+    if(sRL){
+      shoulderRotateL(90);
+      updateLabels();
+    }
+    if(aRR){
+      armRotateR(90);
+      updateLabels();
+    }
+    if(aRL){
+      armRotateL(0);
+      updateLabels();
+    }
+  }
+  
+  public double getShoulderAngle(){
+    return (180-shoulderAngle)*(Math.PI/180);
+  }
+  
+  public double getArmAngle(){
+    return (shoulderAngle+armAngle)*(Math.PI/180);
+  }
+  
+  public double getL(double distance, double height){
+    return Math.sqrt(distance*distance+height*height);
+  }
+  
+  public double getTheta(double distance, double height){
+    double lVal = getL(distance,height);
+    double constants = lVal*lVal -(SHOULDERSIZE*SHOULDERSIZE + ARMSIZE*ARMSIZE);
+    double cosTheta = constants/(-2*SHOULDERSIZE*ARMSIZE);
+    double theta = Math.acos(cosTheta)*(180/Math.PI);
+    return theta;
+  }
+  
+  public double getThetaOne(double distance, double height){
+    double lVal = getL(distance,height);
+    double theta = getTheta(distance,height);
+    double numerator = ARMSIZE*Math.sin(theta*(Math.PI/180));
+    double thetaOne = Math.asin(numerator/lVal)*(180/Math.PI);
+    return thetaOne;
+  }
+  
+  public double getCalculatedShoulderAngle(double distance, double height){
+    double thetaOne = getThetaOne(distance, height);
+    double thetaH = Math.atan2(height,distance)*(180/Math.PI);
+    double thetaS = 180 - thetaOne - thetaH;
+    return thetaS;
+  }
+  
+  public void updateLabels(){
+    distance.setLabel("Distance: " + (SHOULDERSIZE*Math.cos(getShoulderAngle())-ARMSIZE*Math.cos(getArmAngle())));
+    height.setLabel("Height: " + (SHOULDERSIZE*Math.sin(getShoulderAngle())+ARMSIZE*Math.sin(getArmAngle())));
+    shoulderLabel.setLabel("Shoulder Angle: " + shoulderAngle);
+    armLabel.setLabel("Arm Angle: " + armAngle);
+  }
+  
+  public void goToSpot(double dist, double height){
+    auto=!auto;
+    autoDist = dist;
+    autoHeight = height;
+  }
+  
+  public void autoStep(double dist, double height){
+    double shoulderMax = getCalculatedShoulderAngle(dist,height);
+    double armMax = 180-getTheta(dist,height);
+    
+    if(shoulderMax > shoulderAngle) shoulderRotateR(shoulderMax);
+    else shoulderRotateL(shoulderMax);
+    
+    if(armMax > armAngle) armRotateR(armMax);
+    else armRotateL(armMax);
+    
+    if(Math.abs(shoulderAngle - shoulderMax) < 0.1 && Math.abs(armAngle - (armMax)) < 0.1){
+      System.out.println("done");
+      auto = false;
+    }
+    updateLabels();
   }
   
   //left: 37
@@ -103,38 +199,42 @@ public class RobotArmSim extends GraphicsProgram{
   //space: 32
   public void keyPressed(KeyEvent e){
     if(e.getKeyCode()==39){
-      shoulderRRotate = true;
+      sRR = true;
     }
     if(e.getKeyCode()==37){
-      shoulderLRotate = true;
+      sRL = true;
     }
     if(e.getKeyCode()==38){
-      armLRotate = true;
+      aRL = true;
     }
     if(e.getKeyCode()==40){
-      armRRotate = true;
+      aRR = true;
+    }
+    if(e.getKeyCode()==32){
+      goToSpot(150,-10);
     }
   }
   
   public void keyReleased(KeyEvent e){
     if(e.getKeyCode()==39){ 
-      shoulderRRotate = false;
+      sRR = false;
     }
     if(e.getKeyCode()==37){
-      shoulderLRotate = false;
+      sRL = false;
     }
     if(e.getKeyCode()==38){
-      armLRotate = false;
+      aRL = false;
     }
     if(e.getKeyCode()==40){
-      armRRotate = false;
+      aRR = false;
     }
   }
   
   public void run(){
     while(true){
       oneTimeStep();
-      pause(5);
+      if(auto) autoStep(autoDist,autoHeight);
+      pause(1);
     }
   }
 }
