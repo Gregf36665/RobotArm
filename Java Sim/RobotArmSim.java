@@ -192,8 +192,8 @@ public class RobotArmSim extends GraphicsProgram{
       else armRotateL(armMax);
     }
     
-    if(Math.abs(shoulderAngle - shoulderMax) < 0.1) shoulderHit = true;
-    if(Math.abs(armAngle - (armMax)) < 0.1) armHit = true;
+    if(Math.abs(shoulderAngle - shoulderMax) < 0.01) shoulderHit = true;
+    if(Math.abs(armAngle - (armMax)) < 0.01) armHit = true;
     
     if(shoulderHit && armHit){
       System.out.println("done");
@@ -223,7 +223,7 @@ public class RobotArmSim extends GraphicsProgram{
     if(e.getKeyCode()==32){          
       shoulderHit = false;
       armHit = false;
-      goToSpot(250,60);
+      goToSpot(275,300);
     }
   }
   
