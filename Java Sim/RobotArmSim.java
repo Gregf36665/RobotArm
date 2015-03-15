@@ -25,6 +25,9 @@ public class RobotArmSim extends GraphicsProgram{
   private boolean aRR = false, aRL = false;
   private boolean auto;
   
+  private boolean shoulderHit;
+  private boolean armHit;
+  
   private GPolygon shoulder,arm;
   private GRect box;
   
@@ -179,13 +182,20 @@ public class RobotArmSim extends GraphicsProgram{
     double shoulderMax = getCalculatedShoulderAngle(dist,height);
     double armMax = 180-getTheta(dist,height);
     
-    if(shoulderMax > shoulderAngle) shoulderRotateR(shoulderMax);
-    else shoulderRotateL(shoulderMax);
+    if(!shoulderHit){
+      if(shoulderMax > shoulderAngle) shoulderRotateR(shoulderMax);
+      else shoulderRotateL(shoulderMax);
+    }
     
-    if(armMax > armAngle) armRotateR(armMax);
-    else armRotateL(armMax);
+    if(!armHit){
+      if(armMax > armAngle) armRotateR(armMax);
+      else armRotateL(armMax);
+    }
     
-    if(Math.abs(shoulderAngle - shoulderMax) < 0.1 && Math.abs(armAngle - (armMax)) < 0.1){
+    if(Math.abs(shoulderAngle - shoulderMax) < 0.1) shoulderHit = true;
+    if(Math.abs(armAngle - (armMax)) < 0.1) armHit = true;
+    
+    if(shoulderHit && armHit){
       System.out.println("done");
       auto = false;
     }
@@ -210,8 +220,10 @@ public class RobotArmSim extends GraphicsProgram{
     if(e.getKeyCode()==40){
       aRR = true;
     }
-    if(e.getKeyCode()==32){
-      goToSpot(150,-10);
+    if(e.getKeyCode()==32){          
+      shoulderHit = false;
+      armHit = false;
+      goToSpot(250,60);
     }
   }
   
