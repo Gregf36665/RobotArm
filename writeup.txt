@@ -18,7 +18,7 @@ Software Design
 
 
 System Testing
-
+To test the robot wrist angle we reverted back to the code that controlled the robot arms with servos but removed the wrist from the servo control.  This let us quickly test a variety of different angles and visually inspect what was happening.
 
 Conclusion
 
