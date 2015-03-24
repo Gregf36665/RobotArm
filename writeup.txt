@@ -1,11 +1,8 @@
 Lab Writeup
 
 Introduction
-Purpose of lab: The purpose of this lab was to control 5 servos to work together in order to navigate around and move blocks. The goal of this lab was to pick up 4 blocks from pre-specified positions and to stack them all at a single location. The purpose, or takeaway from this project, was to learn how to actively control multiple changing components at once to complete a task.
+Purpose of lab: The purpose of this lab was to control 5 servos to work together in order to navigate around and move blocks. The goal of this lab was to pick up 4 blocks from pre-specified positions and to stack them all at a single location. The purpose, or takeaway from this project, was to learn how to actively control multiple changing components at once to complete a task.  This robot is a small scale version of robots that work on assembly plants helping to manufacture new products.  In this document we will discuss how we implemented the autonomous movement of the arm and tested it safely.
 
-Intended audience: other students at our level who intend on implementing our design
-Why are microcontrollers and robots important? 
-What to expect in remainder of document
 
 High-level Design
 The robot arm was programmed so we would provide four values, the x,y and z positions as well as the state of the grip.  The arm would then convert these values into certain angles for the servos.
