@@ -12,7 +12,7 @@ int minimum[] = {36,65,54,18,89};
 int maximum[] = {153,108,174,94,100};
 int angle[] = {95,90,90,45,90};
 const int wristLevel = 70; // this is the angle between the wrist and the horizon
-
+#define PI 3.1415
 
 void setup(){
   for(int i = 0; i<5;i++){
@@ -23,7 +23,7 @@ Serial.begin(9600);
 
 void loop(){
   baseAngle(270,0);
-  moveToDandH(radius(270,0),0);
+  moveToDandH(270,-75);
 }
 
 /**
@@ -68,8 +68,9 @@ const int C = 197;
 // Angle 2 is wrist
 void moveToDandH(int d, int h){
   int angles[3];
-  angles[0] = mapping(getShoulderAngle(d,h),minimum[1],maximum[1]);
-  angles[1] = mapping(getElbowAngle(d,h),minimum[2],maximum[2]);
+  //int newDist = d-cos(degToRad(wristLevel))*C;
+  angles[0] = mapping(180-getCalculatedShoulderAngle(d-cos(degToRad(wristLevel))*C,h+sin(degToRad(wristLevel))*C),minimum[1],maximum[1]);
+  angles[1] = mapping(180-getElbowAngle(d-cos(degToRad(wristLevel))*C,h+sin(degToRad(wristLevel))*C),minimum[2],maximum[2]);
   angles[2] = mapping(getWristAngle(),minimum[3],minimum[3]);
   for(int i=0;i<3;i++){
     Serial.println(names[i+1] + ":" + angles[i]);
@@ -96,25 +97,37 @@ int getElbowAngle(int d, int h){
   return radToDeg(acos(cosValue));
 }
 
-/* there are 2 angles we need to find to get
-* the shoulder angle
-*/
-int getShoulderAngle(int d, int h){
-  int theta_1 = atan2(d,h);
-  int F = sqrt(d*d+h*h); // the hypotenouse base to wrist orgin
-  int theta_2 = radToDeg(acos((A*A+F*F-B*B)/2*A*F));
-  return theta_1+theta_2;
+int getL(int distance, int myHeight){
+  return sqrt(distance*distance+myHeight*myHeight);
 }
 
+int getTheta(int distance, int myHeight){
+  double lVal = getL(distance,myHeight);
+  double constants = (lVal*lVal -(A*A + B*B));
+  double cosTheta = (constants/((-2)*A*B));
+  double theta = acos(cosTheta)*(180/PI);
+  return theta;
+}
+
+int getThetaOne(int distance, int myHeight){
+  double lVal = getL(distance,myHeight);
+  double theta = getTheta(distance,myHeight);
+  double numerator = B*sin(theta*(PI/180));
+  double thetaOne = asin(numerator/lVal)*(180/PI);
+  return thetaOne;
+}
+
+int getCalculatedShoulderAngle(double distance, double myHeight){
+  double thetaOne = getThetaOne(distance, myHeight); 
+  double thetaH = atan2(myHeight,distance)*(180/PI);
+  double thetaS = (180 - thetaOne - thetaH);
+  return thetaS;
+}
 
 int radToDeg(int rad){
-  return rad*180/3.14;
+  return rad*180/PI;
 }
 
-void autoLevel(){
-  int sAngle = angle[1];
-  int eAngle = angle[2];
-  int wAngle = - sAngle + (180-eAngle) + (90-wristLevel);
-  wAngle = wAngle < 0 ? 0 : wAngle;
-  angle[3] = wAngle;
+int degToRad(int deg){
+  return deg*PI/180;
 }
