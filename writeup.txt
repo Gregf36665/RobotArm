@@ -14,6 +14,9 @@ Detailed Design
 
 Auto level function
 To provide one unique solution we had to fix an angle on the robot arm.  The most logical angle to fix was the robot wrist angle.  Instead of keeping the angle fixed relitive to the previous arm section we kept it flat to the horizon.
+
+Mathematics
+We used trigonometry to find the shoulder and elbow angles.  (0,0,0) is located at the base of the robot.  First we calculated the radial distance with the pythagorean theorem on the x and y components.  Then we did found the arctan of the x and y to get the base angle.  Then we split the shoulder angle into two parts, one part was from the arctan of the radial distance and the height above or beneath the xy plane.  After that we calculated the change in radial distance and height due to the wrist angle.  We subtracted this off of the total radial distance and height.  This gave us the position that the wrist needed to be placed at.  After that we calculated the hypotoneouse of the triangle formed by 
 Software Design
 
 
