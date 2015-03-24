@@ -8,7 +8,7 @@ Why are microcontrollers and robots important?
 What to expect in remainder of document
 
 High-level Design
-
+The robot arm was programmed so we would provide four values, the x,y and z positions as well as the state of the grip.  The arm would then convert these values into certain angles for the servos.
 
 Detailed Design
 
