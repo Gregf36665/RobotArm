@@ -121,7 +121,7 @@ public class RobotArmSim extends GraphicsProgram{
       updateLabels();
     }
     if(aRR){
-      armRotateR(90);
+      armRotateR(160);
       updateLabels();
     }
     if(aRL){
@@ -166,10 +166,10 @@ public class RobotArmSim extends GraphicsProgram{
   }
   
   public void updateLabels(){
-    distance.setLabel("Distance: " + (SHOULDERSIZE*Math.cos(getShoulderAngle())-ARMSIZE*Math.cos(getArmAngle())));
-    height.setLabel("Height: " + (SHOULDERSIZE*Math.sin(getShoulderAngle())+ARMSIZE*Math.sin(getArmAngle())));
-    shoulderLabel.setLabel("Shoulder Angle: " + shoulderAngle);
-    armLabel.setLabel("Arm Angle: " + armAngle);
+    distance.setLabel("Distance: " + (int) (SHOULDERSIZE*Math.cos(getShoulderAngle())-ARMSIZE*Math.cos(getArmAngle())));
+    height.setLabel("Height: " + (int) (SHOULDERSIZE*Math.sin(getShoulderAngle())+ARMSIZE*Math.sin(getArmAngle())));
+    shoulderLabel.setLabel("Shoulder Angle: " + (int) shoulderAngle);
+    armLabel.setLabel("Arm Angle: " + (int) armAngle);
   }
   
   public void goToSpot(double dist, double height){
@@ -192,8 +192,8 @@ public class RobotArmSim extends GraphicsProgram{
       else armRotateL(armMax);
     }
     
-    if(Math.abs(shoulderAngle - shoulderMax) < 0.1) shoulderHit = true;
-    if(Math.abs(armAngle - (armMax)) < 0.1) armHit = true;
+    if(Math.abs(shoulderAngle - shoulderMax) < 0.01) shoulderHit = true;
+    if(Math.abs(armAngle - (armMax)) < 0.01) armHit = true;
     
     if(shoulderHit && armHit){
       System.out.println("done");
@@ -223,7 +223,7 @@ public class RobotArmSim extends GraphicsProgram{
     if(e.getKeyCode()==32){          
       shoulderHit = false;
       armHit = false;
-      goToSpot(150,360);
+      goToSpot(376,-28);
     }
   }
   
@@ -246,7 +246,7 @@ public class RobotArmSim extends GraphicsProgram{
     while(true){
       oneTimeStep();
       if(auto) autoStep(autoDist,autoHeight);
-      pause(1);
+      pause(0.5);
     }
   }
 }

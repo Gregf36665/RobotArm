@@ -121,7 +121,7 @@ public class RobotArmSim extends GraphicsProgram{
       updateLabels();
     }
     if(aRR){
-      armRotateR(90);
+      armRotateR(160);
       updateLabels();
     }
     if(aRL){
@@ -223,7 +223,7 @@ public class RobotArmSim extends GraphicsProgram{
     if(e.getKeyCode()==32){          
       shoulderHit = false;
       armHit = false;
-      goToSpot(275,300);
+      goToSpot(321,-28);
     }
   }
   
@@ -246,7 +246,7 @@ public class RobotArmSim extends GraphicsProgram{
     while(true){
       oneTimeStep();
       if(auto) autoStep(autoDist,autoHeight);
-      pause(1);
+      pause(0.5);
     }
   }
 }
