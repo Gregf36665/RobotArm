@@ -8,10 +8,10 @@ Servo myservo[5];
 
 int pin[] = {3,5,6,9,10};
 String names[] = {"Base", "Shoulder","Elbow","Wrist","Hand"};
-int minimum[] = {36,65,54,18,89};
+int minimum[] = {36,10,54,18,89};
 int maximum[] = {153,108,174,94,100};
 int angle[] = {95,90,90,45,90};
-const int wristLevel = 70; // this is the angle between the wrist and the horizon
+const int wristLevel = 0; // this is the angle between the wrist and the horizon
 #define PI 3.1415
 
 void setup(){
@@ -23,7 +23,7 @@ Serial.begin(9600);
 
 void loop(){
   baseAngle(270,0);
-  moveToDandH(270,-75);
+  moveToDandH(270,0);
 }
 
 /**
@@ -59,23 +59,26 @@ int radius(int xPos, int yPos){
 * The connection between the wrist and the end is called C
 */
 
-const int A = 153;
+const int A = 155;
 const int B = 121;
-const int C = 197;
+const int C = 190;
 
 // Angle 0 is shoulder
 // Angle 1 is elbow
 // Angle 2 is wrist
 void moveToDandH(int d, int h){
   int angles[3];
-  //int newDist = d-cos(degToRad(wristLevel))*C;
-  angles[0] = mapping(180-getCalculatedShoulderAngle(d-cos(degToRad(wristLevel))*C,h+sin(degToRad(wristLevel))*C),minimum[1],maximum[1]);
-  angles[1] = mapping(180-getElbowAngle(d-cos(degToRad(wristLevel))*C,h+sin(degToRad(wristLevel))*C),minimum[2],maximum[2]);
-  angles[2] = mapping(getWristAngle(),minimum[3],minimum[3]);
+  int newDist = d-cos(degToRad(wristLevel))*C+20;
+  int newHeight = h+sin(degToRad(wristLevel))*C;
+  angles[0] = 180-getCalculatedShoulderAngle(newDist,newHeight);
+  angles[1] = 180-getElbowAngle(newDist,newHeight);
+  getWristAngle needs to be fixed ***
+  angles[2] = 25;//getWristAngle();//mapping(getWristAngle(),minimum[3],minimum[3]);
   for(int i=0;i<3;i++){
     Serial.println(names[i+1] + ":" + angles[i]);
     myservo[i+1].write(angles[i]);
   }
+ //myservo[1].write(angles[0]);
 }
 
 // This sets the wrist to be at 45 degrees to the horizon
