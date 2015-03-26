@@ -52,7 +52,7 @@ void loop(){
   moveToCoord(250,100,-66,false);
  
   moveToCoord(114,-125,-56,true);
-  moveToCoord(262,0,-66,false);
+  moveToCoord(266,0,-66,false);
 
   moveToCoord(108,-123,-77,true);
   moveToCoord(199,165,-69,false);
