@@ -66,8 +66,8 @@ void moveToCoord(int x, int y, int z, boolean closed){
   delay(100);
   moveToDandH(sqrt(x*x+y*y),z);
   Serial.println("done");
-  if(closed && currentAngle[4] != 85) slowMove(4,85);
-  else if(!closed && currentAngle[4] != 110) slowMove(4,110);
+  if(closed && currentAngle[4] != 85) slowMove(4,85); // close grip
+  else if(!closed && currentAngle[4] != 110) slowMove(4,110); // open grip
   delay(500);
   moveUp();
 }
